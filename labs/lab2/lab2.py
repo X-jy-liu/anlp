@@ -104,17 +104,21 @@ def normalize_counts(counts):
     returns a corresponding dictionary of probabilities by normalizing
     the counts to sum to 1.
     '''
-    
+    total_counts = sum(counts.values()) 
+    normalized_counts = {key: value / total_counts for key, value in counts.items()}
     ## students need to fill in correct function
-    return counts
+    return normalized_counts
 
 def compute_likelihood(data, model):
     '''compute_likelihood takes a model (ie distribution, represented
     as a dictionary of outcome-probability pairs) and a list of
     outcomes (the data) and computes the likelihood P(data | model)
     '''
+    likelihood = 1
+    for str in data:
+        likelihood *= model[str]
     ## students need to fill in correct function
-    return 0
+    return likelihood
         
 def compute_log_likelihood(data, model):        
     '''compute_likelihood takes a model (ie distribution, represented
@@ -122,8 +126,25 @@ def compute_log_likelihood(data, model):
     outcomes (the data) and computes the log (base 10) of the
     likelihood
     '''
-    ## students need to fill in correct function
-    return 0
+    # Initialize log likelihood to 0
+    log_likelihood = 0.0
+
+    # Iterate over each character in the data sequence
+    for char in data:
+        # Get the probability of the character from the model
+        if char in model:
+            prob = model[char]
+            # Check if the probability is greater than zero
+            if prob > 0:
+                log_likelihood += np.log10(prob)
+            else:
+                # If the probability is zero, the log is undefined, return negative infinity
+                return float('-inf')
+        else:
+            # If character is not in model, it means its probability is effectively 0
+            return float('-inf')
+    
+    return -log_likelihood
 
 ## Main body of code ##
 
